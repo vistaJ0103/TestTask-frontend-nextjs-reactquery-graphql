@@ -30,9 +30,7 @@ const LoginPage = () => {
         router.push("/dashboard");
       },
       onError: (errors: any) => {
-        // const errorMessage = errors.message || 'Unknown error occurred';
-        // console.log(errorMessage)
-        toastNotification("Login failed:", "error", 3000);
+        toastNotification("Login failed:" + errors[0]?.message, "error", 3000);
       },
     }
   );

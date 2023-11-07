@@ -7,7 +7,7 @@ import { Alert } from "antd";
 import { userService } from "@/services/user.service";
 import { toastNotification } from "@/components/Notification";
 import { authService } from "@/services/auth.service";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import request, { Variables } from "graphql-request";
 import { CREATE_USER_MUTATION } from "@/graphql";
 
@@ -20,15 +20,15 @@ const UserAdd = () => {
   const [isErrText, setErrText] = useState('');
   const [rePassword, setRePassword] = useState("");
   const [email, setEmail] = useState("");
-
+  const queryClient = useQueryClient();
   const createUser = useMutation(
     (variables: Variables) => {
       return request('http://localhost:4200/graphql', CREATE_USER_MUTATION, variables);
     },
     {
-      onSuccess: () => {
+      onSuccess: async () => {
         toastNotification("Create Success", "success", 3000);
-        // router.push("/auth/login");
+        await queryClient.refetchQueries('userlist');
       },
       onError: (err) => {
         toastNotification("Create Failed", "error", 3000);
